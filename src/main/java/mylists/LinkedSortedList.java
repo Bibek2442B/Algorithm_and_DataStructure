@@ -112,12 +112,10 @@ public class LinkedSortedList<E extends Comparable<E>> implements SortedList<E>{
     @Override
     public int indexOf(E e) {
         int index = 0;
-        Node<E> node = head;
-        while(node != null){
+        for(Node<E> node = head; node != null; node = node.getNext()){
             int cmp = e.compareTo(node.getElement());
             if(cmp == 0) return index;
             if(cmp < 0) return -1;
-            node = node.getNext();
             index++;
         }
         return -1;
@@ -164,5 +162,28 @@ public class LinkedSortedList<E extends Comparable<E>> implements SortedList<E>{
             list.size++;
         }
         return list;
+    }
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("[");
+        for(Node<E> node = head; node != null; node = node.getNext()){
+            sb.append(node.getElement());
+            if(node.getNext() != null) sb.append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == this) return true;
+        if(obj == null || !(obj instanceof SortedList)) return false;
+        SortedList<?> list = (SortedList<?>) obj;
+        if(this.size != list.size()) return false;
+        Iterator<E> iterator = this.iterator();
+        Iterator<?> otherIterator = list.iterator();
+        while(iterator.hasNext()){
+            if(!iterator.next().equals(otherIterator.next())) return false;
+        }
+        return true;
     }
 }
