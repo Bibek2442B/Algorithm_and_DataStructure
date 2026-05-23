@@ -1,60 +1,39 @@
 package mylists;
 
+import mylists.SortedList;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LinkedSortedList<E extends Comparable<E>> implements SortedList<E>{
+public class LinkedSortedList<E extends Comparable<E>> implements SortedList<E> {
+
     private static class Node<E> {
         private E element;
         private Node<E> next;
-        public Node(E element,  Node<E> next) {
-            this.element = element;
-            this.next = next;
+
+        public Node(E e, Node<E> n) {
+            element = e;
+            next = n;
         }
-        public E getElement() {
-            return this.element;
-        }
-        public Node<E> getNext() {
-            return this.next;
-        }
-        public void setNext(Node<E> next) {
-            this.next = next;
-        }
+
+        public E getElement() { return element; }
+        public Node<E> getNext() { return next; }
+        public void setNext(Node<E> n) { next = n; }
     }
+
     private Node<E> head;
     private int size;
+
     public LinkedSortedList() {
         head = null;
         size = 0;
     }
 
     @Override
-    public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            private Node<E> current = head;
-            @Override
-            public boolean hasNext() {
-                return current != null;
-            }
-            @Override
-            public E next() {
-                if (!hasNext()) throw new NoSuchElementException();
-                E element = current.getElement();
-                current = current.getNext();
-                return element;
-            }
-        };
-    }
+    public int size() { return size; }
 
     @Override
-    public int size() {
-        return this.size;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this.size == 0;
-    }
+    public boolean isEmpty() { return size == 0; }
 
     @Override
     public boolean contains(E e) {
@@ -69,44 +48,46 @@ public class LinkedSortedList<E extends Comparable<E>> implements SortedList<E>{
     @Override
     public boolean add(E e) {
         Node<E> prev = null;
-        Node<E> current = head;
-        while(current!=null){
-            int  cmp = e.compareTo(current.getElement());
-            if(cmp == 0) return false;
-            if(cmp < 0) break;
-            prev = current;
-            current = current.getNext();
+        Node<E> cur = head;
+
+        while (cur != null) {
+            int cmp = e.compareTo(cur.getElement());
+            if (cmp == 0) return false;
+            if (cmp < 0) break;
+            prev = cur;
+            cur = cur.getNext();
         }
-        Node<E> node = new Node<>(e,current);
-        if(prev == null) head = node;
-        else prev.setNext(node);
+        Node<E> newNode = new Node<>(e, cur);
+        if (prev == null) head = newNode;
+        else prev.setNext(newNode);
         size++;
         return true;
     }
 
     @Override
     public E get(int i) {
-        if(i<0 || i>=size()) throw new IndexOutOfBoundsException();
-        Node<E> node = head;
-        for(int j=0;j<i;j++) node = node.getNext();
-        return node.getElement();
+        if (i < 0 || i >= size) throw new IndexOutOfBoundsException();
+        Node<E> cur = head;
+        for (int k = 0; k < i; k++) cur = cur.getNext();
+        return cur.getElement();
     }
 
     @Override
     public E remove(int i) {
-        if(i<0 || i>=size()) throw new IndexOutOfBoundsException();
+        if (i < 0 || i >= size) return null;
         Node<E> prev = null;
-        Node<E> current = head;
-        for(int j=0;j<i;j++){
-            prev = current;
-            current = current.getNext();
+        Node<E> cur = head;
+        for (int k = 0; k < i; k++) {
+            prev = cur;
+            cur = cur.getNext();
         }
-        if(prev == null) {
-            head = current.getNext();
+        if (prev == null) {
+            head = cur.getNext();
+        } else {
+            prev.setNext(cur.getNext());
         }
-        else prev.setNext(current.getNext());
         size--;
-        return current.getElement();
+        return cur.getElement();
     }
 
     @Override
@@ -123,23 +104,21 @@ public class LinkedSortedList<E extends Comparable<E>> implements SortedList<E>{
 
     @Override
     public void addAll(SortedList<E> other) {
-        for(E element : other){
-            this.add(element);
-        }
+        for (E e : other) add(e);
     }
 
     @Override
     public void removeAll(SortedList<E> other) {
-        for(E element : other){
-            int index = this.indexOf(element);
-            if(index != -1) this.remove(index);
+        for (E e : other) {
+            int idx = indexOf(e);
+            if (idx >= 0) remove(idx);
         }
     }
 
     @Override
     public boolean containsAll(SortedList<E> other) {
-        for(E element : other){
-            if(!this.contains(element)) return false;
+        for (E e : other) {
+            if (!contains(e)) return false;
         }
         return true;
     }
@@ -151,39 +130,67 @@ public class LinkedSortedList<E extends Comparable<E>> implements SortedList<E>{
     }
 
     @Override
-    public SortedList<E> clone() {
-        LinkedSortedList<E> list = new LinkedSortedList<>();
-        Node<E> listTail = null;
-        for(Node<E> node = head; node != null; node = node.getNext()){
-            Node<E> newNode = new Node<>(node.getElement(), null);
-            if(listTail == null) list.head = newNode;
-            else listTail.setNext(newNode);
-            listTail = newNode;
-            list.size++;
-        }
-        return list;
-    }
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        for(Node<E> node = head; node != null; node = node.getNext()){
-            sb.append(node.getElement());
-            if(node.getNext() != null) sb.append(", ");
+        Node<E> cur = head;
+        while (cur != null) {
+            sb.append(cur.getElement());
+            if (cur.getNext() != null) sb.append(", ");
+            cur = cur.getNext();
         }
         sb.append("]");
         return sb.toString();
     }
+
+    @Override
+    public SortedList<E> clone() {
+        LinkedSortedList<E> copy = new LinkedSortedList<>();
+        Node<E> cur = head;
+        Node<E> copyTail = null;
+        while (cur != null) {
+            Node<E> newNode = new Node<>(cur.getElement(), null);
+            if (copyTail == null) {
+                copy.head = newNode;
+            } else {
+                copyTail.setNext(newNode);
+            }
+            copyTail = newNode;
+            copy.size++;
+            cur = cur.getNext();
+        }
+        return copy;
+    }
+
     @Override
     public boolean equals(Object obj) {
-        if(obj == this) return true;
-        if(obj == null || !(obj instanceof SortedList)) return false;
-        SortedList<?> list = (SortedList<?>) obj;
-        if(this.size != list.size()) return false;
-        Iterator<E> iterator = this.iterator();
-        Iterator<?> otherIterator = list.iterator();
-        while(iterator.hasNext()){
-            if(!iterator.next().equals(otherIterator.next())) return false;
+        if (this == obj) return true;
+        if (!(obj instanceof SortedList)) return false;
+        SortedList<?> other = (SortedList<?>) obj;
+        if (size != other.size()) return false;
+        Iterator<E> it1 = iterator();
+        Iterator<?> it2 = other.iterator();
+        while (it1.hasNext()) {
+            if (!it1.next().equals(it2.next())) return false;
         }
         return true;
     }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new Iterator<E>() {
+            private Node<E> cur = head;
+
+            @Override
+            public boolean hasNext() { return cur != null; }
+
+            @Override
+            public E next() {
+                if (!hasNext()) throw new NoSuchElementException();
+                E val = cur.getElement();
+                cur = cur.getNext();
+                return val;
+            }
+        };
+    }
+
 }

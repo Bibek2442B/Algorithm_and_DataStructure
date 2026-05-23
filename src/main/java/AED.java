@@ -30,6 +30,7 @@ public class AED {
         return true;
     }
     boolean removeLastClass(){
+        if(classes.size() < 3) return false;
         classes.remove(classes.size()-1);
         distributeStudents();
         return true;
