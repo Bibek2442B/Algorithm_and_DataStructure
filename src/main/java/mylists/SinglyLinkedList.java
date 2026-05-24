@@ -1,7 +1,7 @@
 package mylists;
 
 public class SinglyLinkedList<E> {
-    protected static class Node<E> {
+    private static class Node<E> {
         E data;
         Node<E> next;
         Node(E data,  Node<E> next) {
@@ -18,8 +18,8 @@ public class SinglyLinkedList<E> {
             this.next = next;
         }
     }
-    protected Node<E> head;
-    protected Node<E> tail;
+    private Node<E> head;
+    private Node<E> tail;
     private int size;
     public SinglyLinkedList() {
         head = null;
