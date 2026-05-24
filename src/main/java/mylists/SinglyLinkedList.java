@@ -1,10 +1,15 @@
 package mylists;
 
-public class SinglyLinkedList<E> {
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class SinglyLinkedList<E> implements Iterable<E> {
+
+
     private static class Node<E> {
-        E data;
-        Node<E> next;
-        Node(E data,  Node<E> next) {
+        private E data;
+        private Node<E> next;
+        public Node(E data,  Node<E> next) {
             this.data = data;
             this.next = next;
         }
@@ -43,12 +48,12 @@ public class SinglyLinkedList<E> {
         return tail.getData();
     }
     public void addFirst(E e){
-        head = new Node<E>(e,head);
+        head = new Node<>(e,head);
         if(isEmpty()) tail = head;
         size++;
     }
     public void addLast(E e){
-        Node<E> node = new Node<E>(e,tail);
+        Node<E> node = new Node<>(e,null);
         if(isEmpty()) head = node;
         else tail.setNext(node);
         tail = node;
@@ -59,8 +64,35 @@ public class SinglyLinkedList<E> {
         E ret = head.getData();
         head = head.getNext();
         size--;
+        if(isEmpty()) tail = null;
         return ret;
     }
 
+    @Override
+    public Iterator<E> iterator() {
+        return new MyIterator();
+    }
+
+    private class MyIterator implements Iterator<E> {
+        private Node<E> cur;
+        public MyIterator() {
+            cur = head;
+        }
+        @Override
+        public boolean hasNext() {
+            return cur != null;
+        }
+        @Override
+        public E next() {
+            if(cur == null) throw new NoSuchElementException("No next element");
+            E ret = cur.getData();
+            cur = cur.getNext();
+            return ret;
+        }
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
 }

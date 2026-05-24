@@ -10,27 +10,32 @@ public class LinkedSortedListSinglyAttribute<E extends Comparable<E>> implements
 
     @Override
     public Iterator<E> iterator() {
-        return null;
+        return this.list.iterator();
     }
 
     @Override
     public int size() {
-        return 0;
+        return this.list.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return this.list.isEmpty();
     }
 
     @Override
     public boolean contains(E e) {
+        for(E element: list){
+            if(element.compareTo(e) == 0) return true;
+        }
         return false;
     }
 
     @Override
     public boolean add(E e) {
-        return false;
+        for(E element: list){
+            if(element.compareTo(e) == 0) break;
+        }
     }
 
     @Override

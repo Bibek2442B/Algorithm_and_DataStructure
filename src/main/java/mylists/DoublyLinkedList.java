@@ -1,10 +1,13 @@
 package mylists;
 
-public class DoublyLinkedList <E>{
-    private static class Node<E>{
-        E data;
-        Node<E> next;
-        Node<E> prev;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+public class DoublyLinkedList <E> implements Iterable<E>{
+    protected static class Node<E>{
+        private E data;
+        private Node<E> next;
+        private Node<E> prev;
         public Node(E data, Node<E> prev, Node<E> next){
             this.data = data;
             this.next = next;
@@ -26,8 +29,8 @@ public class DoublyLinkedList <E>{
             this.prev = prev;
         }
     }
-    private Node<E> header;
-    private Node<E> trailer;
+    protected Node<E> header;
+    protected Node<E> trailer;
     private int size;
     public DoublyLinkedList(){
         header = new Node<>(null, null, null);
@@ -51,7 +54,7 @@ public class DoublyLinkedList <E>{
         addBetween(e, header, header.getNext());
     }
     public void addLast(E e){
-        addBetween(e, trailer, trailer.getPrev());
+        addBetween(e, trailer.getPrev(), trailer);
     }
     public E removeFirst(){
         if(isEmpty()) return null;
@@ -61,19 +64,44 @@ public class DoublyLinkedList <E>{
         if(isEmpty()) return null;
         return remove(trailer.getPrev());
     }
-    private void addBetween(E e, Node<E> prev, Node<E> next){
+    protected void addBetween(E e, Node<E> prev, Node<E> next){
         Node<E> node = new Node<>(e, prev, next);
         prev.setNext(node);
         next.setPrev(node);
         size++;
     }
-    private E remove(Node<E> node){
+    protected E remove(Node<E> node){
         Node<E> prev = node.getPrev();
         Node<E> next = node.getNext();
         prev.setNext(next);
         next.setPrev(prev);
         size--;
         return node.getData();
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new DLLIterator();
+    }
+
+    private class DLLIterator implements Iterator<E>{
+        private Node<E> current;
+        public DLLIterator(){
+            current= header.getNext();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current != trailer;
+        }
+
+        @Override
+        public E next() {
+            if(!hasNext()) throw new NoSuchElementException("No next element");
+            E ret = current.getData();
+            current = current.getNext();
+            return ret;
+        }
     }
 
 
