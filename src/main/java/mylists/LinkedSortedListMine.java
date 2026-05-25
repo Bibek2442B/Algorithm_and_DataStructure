@@ -14,8 +14,8 @@ import java.util.NoSuchElementException;
  *
  * @param <E> type of element to be collected; must be comparable.
  */
-public class LinkedSortedList <E extends Comparable<E>> extends DoublyLinkedList<E> implements SortedList<E>{
-    public LinkedSortedList() {
+public class LinkedSortedListMine<E extends Comparable<E>> extends DoublyLinkedList<E> implements SortedList<E>{
+    public LinkedSortedListMine() {
         super();
     }
 
@@ -112,7 +112,7 @@ public class LinkedSortedList <E extends Comparable<E>> extends DoublyLinkedList
 
     @Override
     public SortedList<E> clone() {
-        LinkedSortedList<E> copy = new LinkedSortedList<>();
+        LinkedSortedListMine<E> copy = new LinkedSortedListMine<>();
         for(E elem: this) copy.add(elem);
         return copy;
     }

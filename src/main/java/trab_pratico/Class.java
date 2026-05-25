@@ -4,7 +4,7 @@
  */
 package trab_pratico;
 
-import mylists.LinkedSortedList;
+import mylists.LinkedSortedListMine;
 import mylists.SortedList;
 
 /**
@@ -19,7 +19,7 @@ public class Class implements Comparable<Class> {
     private char id;
 
     /** Sorted list of students in the class. */
-    private LinkedSortedList<Student> students;
+    private LinkedSortedListMine<Student> students;
 
     /**
      * Constructs a class with the given identifier.
@@ -28,7 +28,7 @@ public class Class implements Comparable<Class> {
      */
     public Class(char id) {
         this.id = id;
-        this.students = new LinkedSortedList<>();
+        this.students = new LinkedSortedListMine<>();
     }
 
     /**
