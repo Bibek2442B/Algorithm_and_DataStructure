@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class DoublyLinkedList <E> implements Iterable<E>{
-    protected static class Node<E>{
+    private static class Node<E>{
         private E data;
         private Node<E> next;
         private Node<E> prev;
@@ -33,8 +33,8 @@ public class DoublyLinkedList <E> implements Iterable<E>{
             this.prev = prev;
         }
     }
-    protected Node<E> header;
-    protected Node<E> trailer;
+    private Node<E> header;
+    private Node<E> trailer;
     private int size;
     public DoublyLinkedList(){
         header = new Node<>(null, null, null);
@@ -68,13 +68,13 @@ public class DoublyLinkedList <E> implements Iterable<E>{
         if(isEmpty()) return null;
         return remove(trailer.getPrev());
     }
-    protected void addBetween(E e, Node<E> prev, Node<E> next){
+    private void addBetween(E e, Node<E> prev, Node<E> next){
         Node<E> node = new Node<>(e, prev, next);
         prev.setNext(node);
         next.setPrev(node);
         size++;
     }
-    protected E remove(Node<E> node){
+    private E remove(Node<E> node){
         Node<E> prev = node.getPrev();
         Node<E> next = node.getNext();
         prev.setNext(next);

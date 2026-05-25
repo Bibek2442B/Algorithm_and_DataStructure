@@ -4,7 +4,7 @@
  */
 package trab_pratico;
 
-import mylists.LinkedSortedListMine;
+import mylists.LinkedSortedList;
 
 /**
  * Central class of the AED class management system.
@@ -19,18 +19,18 @@ import mylists.LinkedSortedListMine;
 public class AED {
 
     /** Sorted list of all created classes. */
-    private LinkedSortedListMine<Class> classes;
+    private LinkedSortedList<Class> classes;
 
     /** Sorted list of registered students. */
-    private LinkedSortedListMine<Student> students;
+    private LinkedSortedList<Student> students;
 
 
     /**
      * Constructs an AED system with no classes or registered students.
      */
     public AED() {
-        this.classes    = new LinkedSortedListMine<>();
-        this.students = new LinkedSortedListMine<>();
+        this.classes    = new LinkedSortedList<>();
+        this.students = new LinkedSortedList<>();
     }
 
     /**
