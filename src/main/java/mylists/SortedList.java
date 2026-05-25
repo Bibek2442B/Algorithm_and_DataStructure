@@ -1,5 +1,5 @@
 /**
- * Interface a ser usada no trabalho prático de AED.
+ * Interface a ser usada no trabalho prático de trab_pratico.AED.
  */
 package mylists;
 

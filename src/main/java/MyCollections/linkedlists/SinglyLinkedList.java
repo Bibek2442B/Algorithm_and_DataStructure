@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/trab_pratico.Class.java to edit this template
  */
 package MyCollections.linkedlists;
 
@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
  * @param <E>
  */
 public class SinglyLinkedList<E> implements Iterable<E>{
-    // ---------------- nested Node Class ----------------
+    // ---------------- nested Node trab_pratico.Class ----------------
     private static class Node<E>{
         private final E element;      // reference to the element stored at this node
         private Node<E>next;    // reference to the subsequent node in the list

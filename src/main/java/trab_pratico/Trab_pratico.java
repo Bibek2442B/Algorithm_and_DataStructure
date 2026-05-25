@@ -1,4 +1,19 @@
-public class Main {
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package trab_pratico;
+/**
+ * Main class to test the AED class management application.
+ * Covers the main scenarios: student registration, class creation,
+ * removal of the last class, and viewing of classes.
+ *
+ */
+public class Trab_pratico {
+
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
         System.out.println("=================================================");
         System.out.println("  Test of the AED Class Management Application");
@@ -82,4 +97,5 @@ public class Main {
         System.out.println("--- Classes after second removal ---");
         aed2.showClasses();
     }
+
 }

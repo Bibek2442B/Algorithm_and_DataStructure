@@ -1,196 +1,145 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/trab_pratico.Class.java to edit this template
+ */
 package mylists;
-
-import mylists.SortedList;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LinkedSortedList<E extends Comparable<E>> implements SortedList<E> {
-
-    private static class Node<E> {
-        private E element;
-        private Node<E> next;
-
-        public Node(E e, Node<E> n) {
-            element = e;
-            next = n;
-        }
-
-        public E getElement() { return element; }
-        public Node<E> getNext() { return next; }
-        public void setNext(Node<E> n) { next = n; }
-    }
-
-    private Node<E> head;
-    private int size;
-
+/**
+ * Implementation of a sorted list without repetitions based on a doubly linked list.
+ * Elements are kept in ascending order according to their natural ordering.
+ *
+ *
+ * @param <E> type of element to be collected; must be comparable.
+ */
+public class LinkedSortedList <E extends Comparable<E>> extends DoublyLinkedList<E> implements SortedList<E>{
     public LinkedSortedList() {
-        head = null;
-        size = 0;
+        super();
     }
 
     @Override
-    public int size() { return size; }
-
+    public int size() {
+        return super.size();
+    }
     @Override
-    public boolean isEmpty() { return size == 0; }
-
+    public boolean isEmpty() {
+        return super.isEmpty();
+    }
+    @Override
+    public Iterator<E> iterator(){
+        return super.iterator();
+    }
     @Override
     public boolean contains(E e) {
-        for(Node<E> node = head; node != null; node = node.getNext()){
-            int cmp = e.compareTo(node.getElement());
-            if(cmp == 0) return true;
-            if(cmp < 0) return false;
-        }
+        for(E elem: this) if(elem.compareTo(e)==0) return true;
         return false;
     }
 
     @Override
     public boolean add(E e) {
-        Node<E> prev = null;
-        Node<E> cur = head;
-
-        while (cur != null) {
-            int cmp = e.compareTo(cur.getElement());
-            if (cmp == 0) return false;
-            if (cmp < 0) break;
-            prev = cur;
-            cur = cur.getNext();
+        Node<E> node = this.header.getNext();
+        for(E elem: this){
+            int compare = e.compareTo(elem);
+            if(compare == 0) return false;
+            if(compare<0) break;
+            node = node.getNext();
         }
-        Node<E> newNode = new Node<>(e, cur);
-        if (prev == null) head = newNode;
-        else prev.setNext(newNode);
-        size++;
+        this.addBetween(e, node.getPrev(), node);
         return true;
     }
 
     @Override
     public E get(int i) {
-        if (i < 0 || i >= size) throw new IndexOutOfBoundsException();
-        Node<E> cur = head;
-        for (int k = 0; k < i; k++) cur = cur.getNext();
-        return cur.getElement();
+        if(i<0 || i>=size()) throw new IndexOutOfBoundsException();
+        Iterator<E> iterator = this.iterator();
+        for(int j=0;j<i;j++){
+            iterator.next();
+        }
+        return iterator.next();
     }
 
     @Override
     public E remove(int i) {
-        if (i < 0 || i >= size) return null;
-        Node<E> prev = null;
-        Node<E> cur = head;
-        for (int k = 0; k < i; k++) {
-            prev = cur;
-            cur = cur.getNext();
+        if(i<0 || i>=size()) throw new IndexOutOfBoundsException();
+        Node<E> node = this.header.getNext();
+        for(int j=0;j<i;j++){
+            node = node.getNext();
         }
-        if (prev == null) {
-            head = cur.getNext();
-        } else {
-            prev.setNext(cur.getNext());
-        }
-        size--;
-        return cur.getElement();
+        E deleted = node.getData();
+        this.remove(node);
+        return deleted;
     }
 
     @Override
     public int indexOf(E e) {
-        int index = 0;
-        for(Node<E> node = head; node != null; node = node.getNext()){
-            int cmp = e.compareTo(node.getElement());
-            if(cmp == 0) return index;
-            if(cmp < 0) return -1;
-            index++;
+        int i=0;
+        for(E elem: this){
+            int compare = e.compareTo(elem);
+            if(compare==0) return i;
+            if(compare<0) break;
+            i++;
         }
-        return -1;
+        throw new NoSuchElementException();
     }
 
     @Override
     public void addAll(SortedList<E> other) {
-        for (E e : other) add(e);
+        for(E elem: other) this.add(elem);
     }
 
     @Override
     public void removeAll(SortedList<E> other) {
-        for (E e : other) {
-            int idx = indexOf(e);
-            if (idx >= 0) remove(idx);
+        for(E elem: other){
+            int idx = this.indexOf(elem);
+            if(idx!=-1) this.remove(idx);
         }
     }
 
     @Override
     public boolean containsAll(SortedList<E> other) {
-        for (E e : other) {
-            if (!contains(e)) return false;
-        }
+        if(other.isEmpty()) return true;
+        for(E elem: other) if(!this.contains(elem)) return false;
         return true;
+
     }
 
     @Override
     public void clear() {
-        head = null;
-        size = 0;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder("[");
-        Node<E> cur = head;
-        while (cur != null) {
-            sb.append(cur.getElement());
-            if (cur.getNext() != null) sb.append(", ");
-            cur = cur.getNext();
-        }
-        sb.append("]");
-        return sb.toString();
+        this.removeAll(this);
     }
 
     @Override
     public SortedList<E> clone() {
         LinkedSortedList<E> copy = new LinkedSortedList<>();
-        Node<E> cur = head;
-        Node<E> copyTail = null;
-        while (cur != null) {
-            Node<E> newNode = new Node<>(cur.getElement(), null);
-            if (copyTail == null) {
-                copy.head = newNode;
-            } else {
-                copyTail.setNext(newNode);
-            }
-            copyTail = newNode;
-            copy.size++;
-            cur = cur.getNext();
-        }
+        for(E elem: this) copy.add(elem);
         return copy;
     }
-
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (!(obj instanceof SortedList)) return false;
-        SortedList<?> other = (SortedList<?>) obj;
-        if (size != other.size()) return false;
-        Iterator<E> it1 = iterator();
-        Iterator<?> it2 = other.iterator();
-        while (it1.hasNext()) {
-            if (!it1.next().equals(it2.next())) return false;
-        }
-        return true;
+    public E first() {
+        throw new UnsupportedOperationException("Method not implemented!");
     }
-
     @Override
-    public Iterator<E> iterator() {
-        return new Iterator<E>() {
-            private Node<E> cur = head;
-
-            @Override
-            public boolean hasNext() { return cur != null; }
-
-            @Override
-            public E next() {
-                if (!hasNext()) throw new NoSuchElementException();
-                E val = cur.getElement();
-                cur = cur.getNext();
-                return val;
-            }
-        };
+    public E last() {
+        throw new UnsupportedOperationException("Method not implemented!");
+    }
+    @Override
+    public void addFirst(E e) {
+        throw new UnsupportedOperationException("Method not implemented!");
+    }
+    @Override
+    public void addLast(E e) {
+        throw new UnsupportedOperationException("Method not implemented!");
+    }
+    @Override
+    public E removeFirst() {
+        throw new UnsupportedOperationException("Method not implemented!");
+    }
+    @Override
+    public E removeLast() {
+        throw new UnsupportedOperationException("Method not implemented!");
     }
 
 }
+
